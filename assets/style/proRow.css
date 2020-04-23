@@ -1,0 +1,30 @@
+
+/* 列表 */
+.proRow .item{padding: 30rpx 4%;background: #fff;border-radius: 10rpx;overflow: hidden;align-items: flex-start;}
+.proRow .item .pic{width: 180rpx; height: 180rpx;border-radius: 10rpx;overflow: hidden;}
+.proRow .item .pic image{width: 100%;height: 100%; display: block;}
+.proRow .item .infor{ width:71%;height: 180rpx;position: relative;}
+.proRow .item .B-price{position: absolute;left: 0;right: 0;bottom:0rpx;}
+.proRow .item .lable{line-height: 40rpx;padding: 0 8rpx;border: 1px solid #c0bebe;font-size: 24rpx;color: #999;border-radius: 8rpx;}
+.proRow .item .infor .price{font-size: 30rpx; font-weight: bold;}
+.proRow .item .infor .price2{font-size: 24rpx; font-weight: bold; color: #666;margin-left: 20rpx;}
+.proRow .item .infor .priceTit{font-size: 22rpx; color: #999;margin-left: 10rpx;}
+
+
+
+/* 数量加减 */
+.numBox view{ height: 44rpx; text-align: center; box-sizing: border-box;}
+.numBox .btn{min-width: 44rpx;line-height: 40rpx;color: #999; font-size:38rpx; border-radius: 50%;border:1px solid #eee;}
+.numBox .btn.add{border-color: #38a0f9;color: #fff;}
+.numBox view.num{ width: 60rpx; color: #333;line-height: 44rpx; font-size: 28rpx;padding: 0 10rpx;}
+
+.underBtn .Bbtn{display: block;width: 140rpx;line-height: 50rpx; border:1px solid #eee; text-align: center; margin-left: 30rpx; border-radius: 10rpx; font-size: 24rpx;box-sizing: border-box;}
+
+.underBtn .Bbtn{display: block;width: 160rpx;line-height: 50rpx; border:1px solid #d2d2d2; text-align: center; margin-left: 30rpx; border-radius: 10rpx; font-size: 26rpx;box-sizing: border-box; color: #666;}
+.underBtn .Bbtn.blue{color: #38a0f9;border-color: #38a0f9;}
+
+/* 删除弹框 */
+.alertShow{ width: 80%;position: fixed; top: 50%;left: 50%;transform: translate(-50%,-50%); z-index: 50;box-sizing: border-box;}
+.tip-button .item{width: 50%;box-sizing: border-box; line-height: 100rpx;}
+.tip-button .item:first-child{border-right:1px solid #eee;}
+

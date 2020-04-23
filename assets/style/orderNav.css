@@ -1,0 +1,24 @@
+	
+
+/* 切换带背景导航 */
+.tooling_indNav{padding: 30rpx 4%;}
+.tooling_indNav .list{background: #fff; border-radius: 10rpx;overflow: hidden; display: flex;justify-content: center; align-items: center;}
+.tooling_indNav .list .item{width: 50%;box-sizing: border-box;text-align: center;padding: 0 10rpx;color: #333;line-height: 70rpx;border-right: 2rpx solid #eee;}
+.tooling_indNav .list .item.on{background: #38a0f9; color: #fff;}
+.tooling_indNav .list .item:last-child{border-right: 0;}
+
+
+
+/* 公共切换导航 */
+.orderNav{box-sizing: border-box;}
+.orderNav .tt{ width:50%; text-align: center; line-height: 80rpx;box-sizing: border-box;}
+.orderNav .tt.on{ color: #38a0f9; position: relative;}
+.orderNav .tt.on::after{content: ""; width: 40rpx; height: 6rpx;background: #38a0f9; position: absolute; bottom: 0;left: 50%;transform: translateX(-50%);}
+
+	
+	
+	
+	
+	
+	
+	

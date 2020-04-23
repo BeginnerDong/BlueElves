@@ -1,0 +1,190 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/payEnter/payEnter",
+			"style": {
+				"navigationBarTitleText": "",//扫码支付进入
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页",//设置页面标题文字
+				"onReachBottomDistance":100,
+				"navigationBarBackgroundColor": "#122433",
+				"navigationBarTextStyle": "white"
+				
+			}
+		},
+		{
+			"path": "pages/seachProduct/seachProduct",
+			"style": {
+				"navigationBarTitleText": "搜索",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/productList/productList",
+			"style": {
+				"navigationBarTitleText": "分类",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/productDetail/productDetail",
+			"style": {
+				"navigationBarTitleText": "详情",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/orderConfim/orderConfim",
+			"style": {
+				"navigationBarTitleText": "提交订单",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user_address/user_address",
+			"style": {
+				"navigationBarTitleText": "收货地址",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user_addressAdd/user_addressAdd",
+			"style": {
+				"navigationBarTitleText": "添加地址",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/car/car",
+			"style": {
+				"navigationBarTitleText": "购物车",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user/user",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user_vipEquity/user_vipEquity",
+			"style": {
+				"navigationBarTitleText": "我的权益",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/userOrder/userOrder",
+			"style": {
+				"navigationBarTitleText": "我的订单",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-myIntegral/user-myIntegral",
+			"style": {
+				"navigationBarTitleText": "我的积分",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-myIntegralDetail/user-myIntegralDetail",
+			"style": {
+				"navigationBarTitleText": "积分流水",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-myTeam/user-myTeam",
+			"style": {
+				"navigationBarTitleText": "我的团队",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-myNotice/user-myNotice",
+			"style": {
+				"navigationBarTitleText": "我的公告",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-data/user-data",
+			"style": {
+				"navigationBarTitleText": "数据统计",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-myAssess/user-myAssess",
+			"style": {
+				"navigationBarTitleText": "我的考核",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/userVIP/userVIP",
+			"style": {
+				"navigationBarTitleText": "我的",//我的-服务商
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/userVIP-order/userVIP-order",
+			"style": {
+				"navigationBarTitleText": "我的订单",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/userVIP-returnGoods/userVIP-returnGoods",
+			"style": {
+				"navigationBarTitleText": "申请退货",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/userVIP-myAssess/userVIP-myAssess",
+			"style": {
+				"navigationBarTitleText": "我的考核",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/userVIP-data/userVIP-data",
+			"style": {
+				"navigationBarTitleText": "我的考核",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/userVIP-returnGoodsOrder/userVIP-returnGoodsOrder",
+			"style": {
+				"navigationBarTitleText": "退货订单",
+				"onReachBottomDistance":100
+			}
+		}
+		
+    ],
+	"globalStyle": {
+		//"navigationStyle":"custom",
+		"navigationBarTextStyle": "black",//导航栏文字
+		"navigationBarTitleText": "蓝色精灵",
+		"navigationBarBackgroundColor": "#fff"
+	},
+	"condition": { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [{
+			"name": "", //模式名称
+			"path": "", //启动页面，必选
+			"query": "" //启动参数，在页面的onLoad函数里面得到
+		}]
+	}
+}

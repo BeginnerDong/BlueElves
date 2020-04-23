@@ -1,0 +1,13 @@
+
+
+.seachbox{padding: 30rpx 4% ;box-sizing: border-box;}
+.seachbox .Gps{max-width: 140rpx;}
+.seachbox .Licon{width: 20rpx; height: 26rpx; display: block;}
+.seachbox .rr{width: 85%;height: 60rpx;border-radius: 10rpx;overflow: hidden;box-sizing: border-box;padding: 0 20rpx;}
+.seachbox .rr .input{width:85%;}
+.seachbox .rr .input input{width: 100%;line-height: 60rpx;padding: 0 20rpx 0 0px;box-sizing: border-box;display: block;border: none;font-size: 26rpx;}
+.seachbox .rr .seachBtn{width: 36rpx;height: 36rpx; display: block;border: none;margin: 0;margin-right: 20rpx;}
+.seachbox .rr .seachBtn image{width: 100%;height: 100%;}
+/* .seachbox .delt{width: 10%; height: 26rpx;} */
+.seachbox .delt text{width: 28rpx;height: 28rpx;border-radius: 50%;background: #cfcfcf; color: #fff; line-height: 26rpx;text-align: center;}
+
