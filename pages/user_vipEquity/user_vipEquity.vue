@@ -10,25 +10,22 @@
 					<view class="tit pdlr4 ">推广二维码</view>
 				</view>
 			</view>
-			<view class="ewmPic mgt10"><image src="../../static/images/vip-img.png" mode=""></image></view>
+			<view class="ewmPic mgt10"><image :src="QrData.info&&QrData.info.url?QrData.info.url:''" mode=""></image></view>
 		</view>
 		
-		<view class="contBox mglr4 whiteBj flexCenter" style="height: 500rpx;">
+		<view class="contBox mglr4 whiteBj flexCenter" style="height: 500rpx;" v-if="type=='member'">
 			<view class="titBj white center">
 				<view class="cont pr">
 					<view class="bj"><image src="../../static/images/vip-img1.png" mode=""></image></view>
-					<view class="tit pdlr4 ">升级权益介绍</view>
+					<view class="tit pdlr4 ">{{mainData.title}}</view>
 				</view>
 			</view>
 			<view class="mgt10">
 				<scroll-view class="megText" scroll-y="true">
 					<view class="xqInfor">
-						<view>1、结果看来时间管理人世间工人国家认可考虑的价格来看房管局结果反馈了登记管理；</view>
-						<view>1、结果看来时间管理人世间工人国家认可考虑的价格来看房管局结果反馈了登记管理；</view>
-						<view>1、结果看来时间管理人世间工人国家认可考虑的价格来看房管局结果反馈了登记管理；</view>
-						<view>1、结果看来时间管理人世间工人国家认可考虑的价格来看房管局结果反馈了登记管理；</view>
-						<view>1、结果看来时间管理人世间工人国家认可考虑的价格来看房管局结果反馈了登记管理；</view>
-						<view>1、结果看来时间管理人世间工人国家认可考虑的价格来看房管局结果反馈了登记管理；</view>
+						<view class="content ql-editor" style="padding:0;"
+						v-html="mainData.content">
+						</view>
 					</view>
 				</scroll-view>
 			</view>
@@ -39,20 +36,73 @@
 
 <script>
 	export default {
+		
 		data() {
 			return {
 				Router:this.$Router,
-				showView: false,
-				score:'',
-				wx_info:{}
+				type:'',
+				mainData:{},
+				QrData:{}
 			}
 		},
-		onLoad() {
+		
+		onLoad(options) {
 			const self = this;
-			//self.$Utils.loadAll(['getMainData'], self);
+			self.type = options.type;
+			self.$Utils.loadAll(['getMainData','getQrData'], self);
 		},
+		
 		methods: {
-
+			
+			getQrData() {
+				const self = this;
+				const postData = {};
+				postData.tokenFuncName = 'getProjectToken'
+				postData.qrInfo = {
+					scene: uni.getStorageSync('user_info').user_no,
+					path: 'pages/payEnter/payEnter',
+				};
+				postData.output = 'url';
+				postData.ext = 'png';
+				const callback = (res) => {
+					if (res.solely_code == 100000) {
+						self.QrData = res;
+					} else {
+						self.$Utils.showToast(res.msg, 'none')
+					}
+					self.$Utils.finishFunc('getQrData');
+				};
+				self.$apis.getQrCode(postData, callback);
+			},
+			
+			getMainData() {
+				const self = this;
+				const postData = {};
+				postData.searchItem = {
+					thirdapp_id:2
+				};
+				postData.getBefore = {
+					article:{
+						tableName:'Label',
+						middleKey:'menu_id',
+						key:'id',
+						searchItem:{
+							title: ['in', ['会员权益']],
+						},
+						condition:'in'
+					}
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.mainData = res.info.data[0];
+						const regex = new RegExp('<img', 'gi');
+						self.mainData.content = self.mainData.content.replace(regex, `<img style="max-width: 100%;"`);
+					};
+					console.log(self.mainData)
+					self.$Utils.finishFunc('getMainData');
+				};
+				self.$apis.articleGet(postData, callback);
+			},
 
 		},
 	};

@@ -2,11 +2,11 @@
 	<view>
 		
 		<view class="mglr4">
-			<view class=" pdtb15 flexRowBetween">
-				<view>全部宝贝(3)</view>
-				<view class="fs13"  v-show="!is_allDelt" @click="allDeltShow">管理</view>
-				<view class="fs13"  v-show="is_allDelt" @click="allDeltShow">完成</view>
-			</view>
+			 <view class=" pdtb15 flexRowBetween">
+			 	<view>全部宝贝({{mainData.length?mainData.length:'0'}})</view>
+			 	<view class="fs13"  v-show="!is_allDelt" @click="allDeltShow">管理</view>
+			 	<view class="fs13"  v-show="is_allDelt" @click="allDeltShow">完成</view>
+			 </view>
 			
 			<view class="proRow">
 			 	<view class="item flexRowBetween" v-for="(item,index) in mainData" :key="index">
@@ -16,17 +16,17 @@
 						
 					</view>
 					<view class="R_cont flexRowBetween">
-						<view class="pic"><image src="../../static/images/shopping-img.png" mode=""></image></view>
+						<view class="pic"><image :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:''" mode=""></image></view>
 						<view class="infor">
-							<view class="tit avoidOverflow2">闻达香 有机温水稻花香小米+有机绿小米400g</view>
+							<view class="tit avoidOverflow2">{{item.title}}</view>
 							<view class="flexRowBetween B-price">
 								<view>
-									<view class="flex">
-										<view class="price2">￥69</view>
+									<view class="flex" v-if="userInfoData.behavior>0">
+										<view class="price2">￥{{userInfoData.behavior==1?item.member_price:item.price}}</view>
 										<view class="priceTit">成本价</view>
 									</view>
 									<view class="flex">
-										<view class="price">{{item.price}}</view>
+										<view class="price">{{item.o_price}}</view>
 										<view class="priceTit">销售价</view>
 									</view>
 								</view>
@@ -47,7 +47,7 @@
 		</view>
 		
 		<!-- 无数据 -->
-		<view class="nodata"><image src="../../static/images/nodata.png" mode=""></image></view>
+		<view class="nodata" v-if="mainData.length==0"><image src="../../static/images/nodata.png" mode=""></image></view>
 		
 		
 		<!-- 底部结算 -->
@@ -61,7 +61,7 @@
 			</view>
 			<view class="flexEnd" v-show="!is_allDelt">
 				<view class="fs12 mgr15 flexEnd">合计<view class="price fs16 ftw">{{totalPrice}}</view></view>
-				<view class="payBtn fs16 white" style="width: 260rpx;"  @click="Router.navigateTo({route:{path:'/pages/orderConfim/orderConfim'}})">结算</view>
+				<view class="payBtn fs16 white" style="width: 260rpx;" @click="pay">结算</view>
 			</view>
 			<view class="pubColor flexEnd mgr15" style="width: 34%;" v-show="is_allDelt"><view class="alldeltBtn" @click="deleteAll()">删除</view></view>
 		</view>
@@ -78,15 +78,23 @@
 			<view class="navbar_item" @click="Router.redirectTo({route:{path:'/pages/car/car'}})" >
 				<view class="nav_img pr">
 					<image src="../../static/images/nabar2-a.png" />
-					<view class="carNum">3</view>
+					<view class="carNum" v-if="mainData.length>0">{{cartCount}}</view>
 				</view>
 				<view class="text this-text">购物车</view>
 			</view>
-			<view class="navbar_item" @click="Router.redirectTo({route:{path:'/pages/user/user'}})" >
+			<view class="navbar_item" v-if="userInfoData&&userInfoData.behavior<=1"
+			 @click="Router.redirectTo({route:{path:'/pages/user/user'}})" >
 				<view class="nav_img">
 					<image src="../../static/images/nabar3.png" />
 				</view>
 				<view class="text">我的</view>
+			</view>
+			<view class="navbar_item" v-if="userInfoData&&userInfoData.behavior==2" 
+			@click="Router.redirectTo({route:{path:'/pages/userVIP/userVIP'}})" >
+				<view class="nav_img">
+					<image src="../../static/images/nabar3.png" />
+				</view>
+				<view class="text">服务商</view>
 			</view>
 		</view>
 		<!--底部tab键 end-->
@@ -99,63 +107,77 @@
 		data() {
 			return {
 				Router:this.$Router,
-				showView: false,
-				wx_info:{},
-				is_show:false,
 				count:1,
 				mainData:[
-					{isSelect:true,price:'126',count:'1'},
-					{isSelect:false,price:'126',count:'1'}
+					
 				],
 				is_allDelt:false,
-				isChooseAll:false,
-				totalPrice:"126"
+				totalPrice:0,
+				isChooseAll:true,
+				cartCount:0,
+				userInfoData:{}
 			}
 		},
 		
-		onLoad(options) {
+		onLoad() {
 			const self = this;
-			// self.$Utils.loadAll(['getMainData'], self);
+			//self.$Utils.loadAll(['getUserInfoData'], self);
 		},
+		
+		onShow() {
+			const self = this;
+			self.cartCount = 0;
+			self.mainData = self.$Utils.getStorageArray('cartData');
+			for (var i = 0; i < self.mainData.length; i++) {
+				self.cartCount += parseInt( self.mainData[i].count)
+			};
+			self.checkChooseAll();
+			self.getUserInfoData()
+			//self.countTotalPrice();
+		},
+		
 		methods: {
-			allDeltShow(){
+			
+			getUserInfoData() {
 				const self = this;
-				self.is_allDelt = !self.is_allDelt
-			},
-			counter(index,type) {
-				const self = this;
-				if (type == '+') {
-					self.mainData[index].count++;
-				} else {
-					if (self.mainData[index].count > 1) {
-						self.mainData[index].count--;
+				const postData = {};
+				postData.tokenFuncName = 'getProjectToken';
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.userInfoData = res.info.data[0]
 					}
+					self.countTotalPrice()
 				};
-				self.$Utils.setStorageArray('cartData', self.mainData[index], 'id', 999);
-				self.countTotalPrice();
+				self.$apis.userGet(postData, callback);
 			},
-			deleteAll() {
+			
+			pay(e) {
 				const self = this;
-				uni.showModal({
-					title: '提示',
-					content: '确认要删除选中商品吗？',
-					showCancel: true,
-					cancelText: '取消',
-					confirmText: '确认',
-					success: res => {
-						if (res.confirm) {
-							for (var i = 0; i < self.mainData.length; i++) {
-								if(self.mainData[i].isSelect){
-									self.$Utils.delStorageArray('cartData', self.mainData[i], 'id');
-								}
-							};
-							self.mainData = self.$Utils.getStorageArray('cartData');
-						} else if (res.cancel) {
-							console.log('用户点击取消');
-						}
-					},
-				});
+				const orderList = [
+				];
+				for (var i = 0; i < self.mainData.length; i++) {
+					if (self.mainData[i].isSelect) {
+						orderList.push({
+							product_id: self.mainData[i].id,
+							count: self.mainData[i].count,
+							product: self.mainData[i]
+						}, );
+					};
+				};
+				if (orderList.length == 0) {
+					self.$Utils.showToast('未选择商品', 'none', 1000);
+					return;
+				};
+				uni.setStorageSync('payPro', orderList);
+				self.$Router.navigateTo({
+					route: {
+						path: '/pages/orderConfim/orderConfim'
+					}
+				})
+			
+			
 			},
+			
 			checkChooseAll() {
 				const self = this;
 				var isChooseAll = true;
@@ -176,6 +198,58 @@
 				};
 				self.countTotalPrice();
 			},
+			
+			allDeltShow(){
+				const self = this;
+				self.is_allDelt = !self.is_allDelt
+			},
+			
+			counter(index,type) {
+				const self = this;
+				if (type == '+') {
+					self.mainData[index].count++;
+				} else {
+					if (self.mainData[index].count > 1) {
+						self.mainData[index].count--;
+					}
+				};
+				self.$Utils.setStorageArray('cartData', self.mainData[index], 'id', 999);
+				self.cartCount = 0;
+				for (var i = 0; i < self.mainData.length; i++) {
+					self.cartCount += parseInt( self.mainData[i].count)
+				};
+				self.countTotalPrice();
+			},
+			
+			deleteAll() {
+				const self = this;
+				uni.showModal({
+					title: '提示',
+					content: '确认要删除选中商品吗？',
+					showCancel: true,
+					cancelText: '取消',
+					confirmText: '确认',
+					success: res => {
+						if (res.confirm) {
+							for (var i = 0; i < self.mainData.length; i++) {
+								if(self.mainData[i].isSelect){
+									self.$Utils.delStorageArray('cartData', self.mainData[i], 'id');
+								}
+							};
+							self.mainData = self.$Utils.getStorageArray('cartData');
+							self.cartCount = 0;
+							for (var i = 0; i < self.mainData.length; i++) {
+								self.cartCount += parseInt( self.mainData[i].count)
+							};
+						} else if (res.cancel) {
+							console.log('用户点击取消');
+						}
+					},
+				});
+			},
+			
+			
+			
 			choose(index) {
 				const self = this;
 				
@@ -193,21 +267,23 @@
 			countTotalPrice() {
 				const self = this;
 				self.totalPrice = 0;
-				
+				console.log('self.userInfoData',self.userInfoData)
 				for (var i = 0; i < self.mainData.length; i++) {
 					if (self.mainData[i].isSelect) {
-						self.totalPrice += self.mainData[i].price * self.mainData[i].count;
+						if(self.userInfoData.behavior==1){
+							self.totalPrice += self.mainData[i].member_price * self.mainData[i].count;
+						}else if(self.userInfoData.behavior==2){
+							self.totalPrice += self.mainData[i].price * self.mainData[i].count;
+						}else if(self.userInfoData.behavior==0){
+							self.totalPrice += self.mainData[i].o_price * self.mainData[i].count;
+						}
+						
 					};
 				};
 				console.log(self.totalPrice)
 			},
-			getMainData() {
-				const self = this;
-				console.log('852369')
-				const postData = {};
-				postData.tokenFuncName = 'getProjectToken';
-				self.$apis.orderGet(postData, callback);
-			}
+			
+			
 		}
 	};
 </script>

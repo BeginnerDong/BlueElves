@@ -12,17 +12,17 @@
 				<image src="../../static/images/integrall-icon.png" mode=""></image>
 			</view>
 			<view class="color6 mgb10">佣金积分</view>
-			<view class="fs24 ftw">￥562</view>
+			<view class="fs24 ftw">￥{{userInfoData.balance?userInfoData.balance:'***'}}</view>
 		</view>
 		
 		<view class="loginCont">
 			<view class="item flex mgb20">
 				<view class="input">
-					<input type="text" value="" placeholder="请输入提现金额" placeholder-class="placeholder">
+					<input type="text" v-model="submitData.count" placeholder="请输入提现金额" placeholder-class="placeholder">
 				</view>
 			</view>
 			
-			<view class="item submitbtn mgt15" style="padding: 0;" @click="Router.navigateTo({route:{path:'/pages/storeOrder/storeOrder'}})">
+			<view class="item submitbtn mgt15" style="padding: 0;" @click="submit">
 				<button class="Wbtn" type="submint">申请提现</button>
 			</view>
 			
@@ -40,23 +40,101 @@
 		data() {
 			return {
 				Router:this.$Router,
-				is_show: false,
-				wx_info:{}
+				Utils:this.$Utils,
+				mainData:{},
+				userInfoData:{},
+				submitData:{
+					count:''
+				},
 			}
 		},
+		
 		onLoad() {
 			const self = this;
-			// self.$Utils.loadAll(['getMainData'], self);
+			self.$Utils.loadAll(['getUserInfoData'], self);
 		},
+		
 		methods: {
 			
-			getMainData() {
+			submit() {
+				const self = this;
+				uni.setStorageSync('canClick', false);
+				
+				const pass = self.$Utils.checkComplete(self.submitData);
+				console.log('self.submitData',self.submitData)
+				if (pass) {
+					
+					if(parseFloat(self.submitData.count)>parseFloat(self.userInfoData.balance)){
+						uni.setStorageSync('canClick', true);
+						self.$Utils.showToast('余额不足', 'none');
+						return
+					};
+					if(parseFloat(self.submitData.count)<=0){
+						uni.setStorageSync('canClick', true);
+						self.$Utils.showToast('请输入正确的金额', 'none');
+						return
+					};
+					self.flowLogAdd()
+				} else {
+					uni.setStorageSync('canClick', true);
+					self.$Utils.showToast('请输入提现金额', 'none')
+				};
+			},
+			
+			flowLogAdd() {
+				const self = this;
+				const postData = {};
+				postData.tokenFuncName = 'getProjectToken'
+				/* if(!wx.getStorageSync('user_info')||!wx.getStorageSync('user_info').headImgUrl){
+				  postData.refreshToken = true;
+				}; */
+				postData.data = {
+					count:-self.submitData.count,
+					thirdapp_id:2,
+					status:1,
+					trade_info:'提现',
+					type:2,
+					account:1,
+					withdraw:1,
+					withdraw_status:0
+				};
+				const callback = (data) => {				
+					if (data.solely_code == 100000) {					
+						self.$Utils.showToast('提交成功', 'none');
+						setTimeout(function() {
+							uni.navigateBack({
+								delta:1
+							})
+						}, 1000)
+					} else {
+						uni.setStorageSync('canClick', true);
+						self.$Utils.showToast(data.msg, 'none', 1000)
+					}	
+				};
+				self.$apis.flowLogAdd(postData, callback);
+			},
+			
+			
+			getUserInfoData() {
 				const self = this;
 				console.log('852369')
-				const postData = {};
+				const postData = {
+					searchItem:{}
+				};
 				postData.tokenFuncName = 'getProjectToken';
-				self.$apis.orderGet(postData, callback);
-			}
+				postData.searchItem.user_no = uni.getStorageSync('user_info').user_no
+				const callback = (res) => {
+					if (res.solely_code == 100000 && res.info.data[0]) {
+						self.userInfoData = res.info.data[0]
+						
+					} else {
+						self.$Utils.showToast(res.msg, 'none');
+					};
+					self.$Utils.finishFunc('getUserInfoData');
+			
+				};
+				self.$apis.userInfoGet(postData, callback);
+			},
 		}
 	};
 </script>

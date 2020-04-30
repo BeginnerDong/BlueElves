@@ -5,41 +5,77 @@ export default {
 	
 
 	realPay(param, callback) {
-	
-		function onBridgeReady(param) {
-			WeixinJSBridge.invoke(
-				'getBrandWCPayRequest', {
-					"appId": "wx7db54ed176405e24", //公众号名称，由商户传入     
-					'timeStamp': param.timeStamp,
-					'nonceStr': param.nonceStr,
-					'package': param.package,
-					'signType': param.signType,
-					'paySign': param.paySign,
-				},
-				function(res) {
-	
-					if (res.err_msg == "get_brand_wcpay_request:ok") {
-						// 使用以上方式判断前端返回,微信团队郑重提示：
-						//res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
-						callback && callback(1);
-					} else {
-/* 						alert(JSON.stringify(res));
-						alert(res.err_msg); */
-						callback && callback(0);
-					}
+		uni.requestPayment({
+			provider: 'wxpay',
+			'timeStamp': param.timeStamp,
+			'nonceStr': param.nonceStr,
+			'package': param.package,
+			'signType': param.signType,
+			'paySign': param.paySign,
+			success: function(res) {
+				console.log(res);
+				wx.showToast({
+					title: '支付成功',
+					icon: 'none',
+					duration: 1000,
+					mask: true
 				});
-		}
-		if (typeof WeixinJSBridge == "undefined") {
-			if (document.addEventListener) {
-				document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
-			} else if (document.attachEvent) {
-				document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
-				document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
-			}
-		} else {
-			onBridgeReady(param);
-		}
 	
+				callback && callback(1);
+			},
+			fail: function(res) {
+				console.log(res);
+				wx.showToast({
+					title: '支付失败',
+					icon: 'none',
+					duration: 1000,
+					mask: true
+				});
+				callback && callback(0);
+			}
+		});
+	},
+	
+	
+	distance(la1, lo1, la2, lo2) {
+		var La1 = la1 * Math.PI / 180.0;
+		var La2 = la2 * Math.PI / 180.0;
+		var La3 = La1 - La2;
+		var Lb3 = lo1 * Math.PI / 180.0 - lo2 * Math.PI / 180.0;
+		var s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(La3 / 2), 2) + Math.cos(La1) * Math.cos(La2) * Math.pow(Math.sin(
+			Lb3 / 2), 2)));
+		s = s * 6378.137;
+		s = Math.round(s * 10000) / 10000;
+		s = s.toFixed(2);
+		return s;
+	},
+	
+	
+	getAuthSetting(callback) {
+		wx.getSetting({
+			success: setting => {
+				if (!setting.authSetting['scope.userInfo']) {
+					wx.hideLoading();
+					uni.setStorageSync('canClick', true);
+					this.showToast('授权请点击同意', 'none');
+				} else {
+					uni.getUserInfo({
+						provider: 'weixin',
+						success: function(infoRes) {
+							console.log('-------获取微信用户所有-----');
+							console.log(JSON.stringify(infoRes.userInfo));
+							callback && callback(infoRes.userInfo, setting);
+						}
+					});
+	
+					/* wx.getUserInfo({
+						success: function(user) {
+							
+						}
+					}); */
+				};
+			}
+		});
 	},
 	
 	getHashParameters() {

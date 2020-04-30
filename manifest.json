@@ -55,7 +55,7 @@
     /* 快应用特有相关 */
     "mp-weixin" : {
         /* 小程序特有相关 */
-        "appid" : "wx17e356eb62d1fbe5",
+        "appid" : "wx5ff6e9faba52afc6",
         "setting" : {
             "urlCheck" : false,
             "es6" : true,
@@ -63,7 +63,11 @@
             "minified" : true
         },
         "usingComponents" : false,
-        "permission" : {}
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "获取您的位置信息"
+            }
+        }
     },
     "h5" : {
         "title" : "蓝色精灵",

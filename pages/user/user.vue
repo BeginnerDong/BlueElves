@@ -4,20 +4,20 @@
 		<view class="userHead whiteBj pdlr4 pdb15">
 			<view class="infor pdtb15">
 				<view class="flex">
-					<view class="photo mgr10"><image src="../../static/images/about-img.png" mode=""></image></view>
+					<view class="photo mgr10" style="overflow: hidden;"><open-data type="userAvatarUrl"></open-data></view>
 					<view style="width: 78%;">
 						<view class="flex">
-							<view class="fs15 ftw pdb5">一条小团团</view>
+							<view class="fs15 ftw pdb5" ><open-data type="userNickName"></open-data></view>
 							<view class="mgl10 mgb5 titVIP fs12 white">类型：会员</view>
 						</view>
 						<view class="flex">
 							<view class="IDicon"><image src="../../static/images/about-icon0.png" mode=""></image></view>
-							<view>ID:26562456235</view>
+							<view>ID:{{userInfoData.user_no?userInfoData.user_no:'*******'}}</view>
 						</view>
 					</view>
 				</view>
 			</view>
-			<view class="vipEquity flexRowBetween pdlr4 pr" @click="Router.navigateTo({route:{path:'/pages/user_vipEquity/user_vipEquity'}})">
+			<view class="vipEquity flexRowBetween pdlr4 pr" @click="Router.navigateTo({route:{path:'/pages/user_vipEquity/user_vipEquity?type=member'}})">
 				<view class="bj"><image src="../../static/images/about-img1.png" mode=""></image></view>
 				<view class="infor flexRowBetween">
 					<view class="flex">
@@ -127,13 +127,15 @@
 				</view>
 				<view class="text">购物车</view>
 			</view>
-			<view class="navbar_item" @click="Router.redirectTo({route:{path:'/pages/user/user'}})" >
+			<view class="navbar_item" v-if="userInfoData&&userInfoData.behavior<=1"
+			 @click="Router.redirectTo({route:{path:'/pages/user/user'}})" >
 				<view class="nav_img">
 					<image src="../../static/images/nabar3-a.png" />
 				</view>
-				<view class="text this-text">我的</view>
+				<view class="text">我的</view>
 			</view>
-			<view class="navbar_item" @click="Router.redirectTo({route:{path:'/pages/userVIP/userVIP'}})" >
+			<view class="navbar_item" v-if="userInfoData&&userInfoData.behavior==2" 
+			@click="Router.redirectTo({route:{path:'/pages/userVIP/userVIP'}})" >
 				<view class="nav_img">
 					<image src="../../static/images/nabar3.png" />
 				</view>
@@ -150,18 +152,29 @@
 		data() {
 			return {
 				Router:this.$Router,
-				showView: false,
-				score:'',
-				wx_info:{}
+				userInfoData:{}
 			}
 		},
+		
 		onLoad() {
 			const self = this;
-			//self.$Utils.loadAll(['getMainData'], self);
+			self.$Utils.loadAll(['getUserInfoData'], self);
 		},
+		
 		methods: {
-
-
+			
+			getUserInfoData() {
+				const self = this;
+				const postData = {};
+				postData.tokenFuncName = 'getProjectToken';
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.userInfoData = res.info.data[0]
+					}
+					self.$Utils.finishFunc('getUserInfoData');
+				};
+				self.$apis.userGet(postData, callback);
+			},
 		},
 	};
 </script>

@@ -7,33 +7,36 @@
 					<image src="../../static/images/home-icon.png" mode=""></image>
 				</button>
 				<view class="input">
-					<input type="text" name="" value="" placeholder="搜索您想要的商品" placeholder-class="placeholder" />
+					<input type="text" v-model="title"  placeholder="搜索您想要的商品" placeholder-class="placeholder" />
 				</view>
-				<view class="delt flexCenter"><text>×</text></view>
+				<view class="delt flexCenter" v-if="title!=''" @click="deleteKey"><text>×</text></view>
 			</view>
-			<view class="fs15 pubColor">搜索</view>
+			<view class="fs15 pubColor" @click="search">搜索</view>
 		</view>
 		
 		<view class="mglr4 productList mgt15">
-			<view class="item radius10 pr flex" v-for="(item,index) in productData" :key="index">
-				
-				<view class="pic" @click="Router.navigateTo({route:{path:'/pages/productDetail/productDetail'}})"><image src="../../static/images/home-img.png" mode=""></image></view>
+			<view class="item radius10 pr flex" v-for="(item,index) in mainData" :key="index">
+				<view class="pic"  :data-id="item.id" @click="Router.navigateTo({route:{path:'/pages/productDetail/productDetail?id='+$event.currentTarget.dataset.id}})">
+					<image :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:''" mode=""></image>
+				</view>
 				<view class="infor">
-					<view class="tit avoidOverflow2" @click="Router.navigateTo({route:{path:'/pages/productDetail/productDetail'}})">闻达香 有机温水稻花香小米+有机绿小米400g</view>
+					<view class="tit avoidOverflow2"  :data-id="item.id" @click="Router.navigateTo({route:{path:'/pages/productDetail/productDetail?id='+$event.currentTarget.dataset.id}})">
+						{{item.title}}
+					</view>
 					<view class="B-price">
 						<view class="flex">
-							<view class="price">79</view>
+							<view class="price">{{item.o_price}}</view>
 							<view class="priceTit">销售价</view>
-							<view class="price2">￥69</view>
-							<view class="priceTit">成本价</view>
+							<view class="price2" v-if="item.behavior>0">￥{{item.behavior==1?item.member_price:item.price}}</view>
+							<view class="priceTit" v-if="item.behavior>0">成本价</view>
 						</view>
 					</view>
-					<view class="addCar"><image src="../../static/images/home-icon9.png" mode=""></image></view>
+					<view class="addCar" @click="addCar(index)"><image src="../../static/images/home-icon9.png" mode=""></image></view>
 				</view>
 			</view>
 		</view>
 		<!-- 无数据 -->
-		<view class="nodata"><image src="../../static/images/nodata.png" mode=""></image></view>
+		<view class="nodata" v-if="mainData.length==0"><image src="../../static/images/nodata.png" mode=""></image></view>
 		
 	</view>
 </template>
@@ -43,25 +46,91 @@
 		data() {
 			return {
 				Router:this.$Router,
-				showView: false,
-				wx_info:{},
-				is_show:false,
-				productData:[{},{}]
+				
+				title:'',
+				mainData:[],
+				searchItem:{
+					thirdapp_id:2
+				}
 			}
 		},
 		
-		onLoad(options) {
+		onLoad() {
 			const self = this;
+			self.paginate = self.$Utils.cloneForm(self.$AssetsConfig.paginate);
 			// self.$Utils.loadAll(['getMainData'], self);
 		},
+		
 		methods: {
-			getMainData() {
+			
+			addCar(index){
 				const self = this;
-				console.log('852369')
+				var array = self.$Utils.getStorageArray('cartData');
+				for (var i = 0; i < array.length; i++) {
+					if(array[i].id == self.mainData[index].id){
+						var target = array[i]
+					}
+				}
+				if(target){
+					target.count  = target.count + 1
+				}else{
+					var target = self.mainData[index];
+					target.count = 1;
+					target.isSelect = true;
+				}
+				self.$Utils.showToast('加入成功', 'none');
+				self.$Utils.setStorageArray('cartData', target, 'id', 999);
+				self.cartData = self.$Utils.getStorageArray('cartData');
+				self.cartCount = 0;
+				for (var i = 0; i < self.cartData.length; i++) {
+					self.cartCount += parseInt( self.cartData[i].count)
+				};
+			},
+			
+			deleteKey(){
+				const self = this;
+				self.title = ''
+			},
+			
+			search(){
+				const self = this;
+				if(self.title!=''){
+					self.searchItem.title = ['like',['%'+self.title+'%']];
+				}else{
+					delete self.searchItem.title
+				}
+				self.getMainData()
+			},
+			
+			getMainData(isNew) {
+				const self = this;
+				if (isNew) {
+					self.mainData = [];
+					self.paginate = {
+						count: 0,
+						currentPage: 1,
+						pagesize: 10,
+						is_page: true,
+					}
+				};
 				const postData = {};
-				postData.tokenFuncName = 'getProjectToken';
-				self.$apis.orderGet(postData, callback);
-			}
+				postData.paginate = self.$Utils.cloneForm(self.paginate);
+				postData.searchItem = self.$Utils.cloneForm(self.searchItem)
+				postData.order = {
+					listorder: 'desc'
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.mainData.push.apply(self.mainData, res.info.data);
+					} else {
+					
+					};
+					self.$Utils.finishFunc('getMainData');
+			
+				};
+				self.$apis.productGet(postData, callback);
+			},
+			
 		}
 	};
 </script>
