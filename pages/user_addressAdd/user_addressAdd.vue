@@ -13,17 +13,18 @@
 					<input type="number" maxlength="11"  v-model="submitData.phone" placeholder="请输入手机号" placeholder-class="placeholder">
 				</view>
 			</view>	
-			<view class="item flexRowBetween pdtb15 borderB1">
+			<!-- <view class="item flexRowBetween pdtb15 borderB1">
 				<view class="ll">所在地区</view>
 				<view class="rr fs13 color9" @click="chooseAddress()">
 					<input type="text" placeholder="选择您的位置" disabled="true"   v-model="submitData.city">
 					<image class="arrowR" src="../../static/images/about-icon-1.png" mode=""></image>
 				</view>
-			</view>	
-			<view class="item flexRowBetween pdtb15 borderB1">
-				<view class="ll">详细地址</view>
-				<view class="rr fs13" >
-					<input type="text"  v-model="submitData.detail" placeholder="请填写" placeholder-class="placeholder">
+			</view> -->	
+			<view class="item flex pdtb15 borderB1">
+				<view class="ll">收货地址</view>
+				<view class="rr fs13" style="width: 70%;">
+					<textarea type="text" style="background-color: #f5f5f5;" v-model="submitData.detail" placeholder="请填写" placeholder-class="placeholder"></textarea>
+					<!-- <input type="text"  v-model="submitData.detail" placeholder="请填写" placeholder-class="placeholder"> -->
 				</view>
 			</view>	
 			<view class="item flexRowBetween pdtb15 borderB1">
@@ -34,7 +35,7 @@
 			</view>	
 			
 			<view class="submitbtn pdtb15"  style="margin-top: 200rpx;">
-				<button class="btn flexCenter" type="button"  @click="Utils.stopMultiClick(submit)">新增</button>
+				<button class="btn flexCenter" type="button"  @click="Utils.stopMultiClick(submit)">{{!isEdit?'新增':'修改'}}</button>
 			</view>
 		</view>
 		
@@ -58,12 +59,12 @@
 			return {
 				submitData: {
 					name: '',
-					city:'',
+					//city:'',
 					detail: '',
 					phone:'',
 					isdefault:0,
-					latitude:'',
-					longitude:''
+					//latitude:'',
+					//longitude:''
 				},
 				
 				mulLinkageTwoPicker: cityData,
@@ -74,13 +75,14 @@
 				deepLength: 1,
 				pickerValueDefault: [0],
 				pickerValueArray:[],
-				
+				isEdit:false
 			}
 		},
 		onLoad(options) {
 			const self = this;
 			if(options.id){
 				self.id = options.id;
+				self.isEdit = true;
 				var res = self.$Token.getProjectToken(function(){
 					self.$Utils.loadAll(['getMainData'], self)
 				});
@@ -235,11 +237,11 @@
 				const callback = (res) => {
 					console.log(res);
 					self.submitData.name = res.info.data[0].name;
-					self.submitData.city = res.info.data[0].city;
+					//self.submitData.city = res.info.data[0].city;
 					self.submitData.detail = res.info.data[0].detail;
 					self.submitData.phone = res.info.data[0].phone;
-					self.submitData.latitude = res.info.data[0].latitude;
-					self.submitData.longitude = res.info.data[0].longitude;
+					//self.submitData.latitude = res.info.data[0].latitude;
+					//self.submitData.longitude = res.info.data[0].longitude;
 					self.submitData.isdefault = res.info.data[0].isdefault;
 					self.$Utils.finishFunc('getMainData');
 				};
@@ -310,11 +312,14 @@
 				var newObject = self.$Utils.cloneForm(self.submitData);
 				delete newObject.default;
 				const pass = self.$Utils.checkComplete(newObject);
-
+				
 				console.log('self.data.sForm', self.submitData)
 				console.log('pass', pass)
 				if (pass) {
-					
+					if (self.submitData.phone.trim().length != 11 || !/^1[3|4|5|6|7|8|9]\d{9}$/.test(self.submitData.phone)) {
+						self.$Utils.showToast('请输入正确的手机号', 'none', 1000)
+						return;
+					}
 					if (self.id) {
 
 						self.addressUpdate();

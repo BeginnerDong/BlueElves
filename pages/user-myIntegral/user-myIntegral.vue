@@ -11,22 +11,48 @@
 			<view class="loginBj pr">
 				<image src="../../static/images/integrall-icon.png" mode=""></image>
 			</view>
-			<view class="color6 mgb10">佣金积分</view>
+			<view class="color6 mgb10">余额</view>
 			<view class="fs24 ftw">￥{{userInfoData.balance?userInfoData.balance:'***'}}</view>
 		</view>
 		
 		<view class="loginCont">
-			<view class="item flex mgb20">
+			<view class="item flex mgb10">
 				<view class="input">
 					<input type="text" v-model="submitData.count" placeholder="请输入提现金额" placeholder-class="placeholder">
 				</view>
+				
 			</view>
-			
+			<view class="item flex mgb10">
+				
+				<view class="input">
+					<input type="text" v-model="submitData.phone" placeholder="请输入手机号" placeholder-class="placeholder">
+				</view>
+			</view>
+			<!-- <view class="item flex mgb10">
+				<view class="input">
+					<input type="text" v-model="submitData.wechat" placeholder="请输入微信号" placeholder-class="placeholder">
+				</view>
+			</view> -->
+			<view class="item flex mgb10">
+				<view class="input">
+					<input type="text" v-model="submitData.name " placeholder="请输入姓名" placeholder-class="placeholder">
+				</view>
+			</view>
+			<view class="item flex mgb10">
+				<view class="input">
+					<input type="text" v-model="submitData.card_no" placeholder="请输入银行卡号" placeholder-class="placeholder">
+				</view>
+			</view>
+			<view class="item flex mgb10">
+				<view class="input">
+					<input type="text" v-model="submitData.bank" placeholder="请输入开户行" placeholder-class="placeholder">
+				</view>
+			</view>
 			<view class="item submitbtn mgt15" style="padding: 0;" @click="submit">
 				<button class="Wbtn" type="submint">申请提现</button>
 			</view>
 			
-			<view class="mgt15 red">目前为线下提现</view>
+			
 		</view>
 		
 		
@@ -44,7 +70,12 @@
 				mainData:{},
 				userInfoData:{},
 				submitData:{
-					count:''
+					count:'',
+					name:'',
+					phone:'',
+					//wechat:'',
+					card_no:'',
+					bank:''
 				},
 			}
 		},
@@ -77,7 +108,7 @@
 					self.flowLogAdd()
 				} else {
 					uni.setStorageSync('canClick', true);
-					self.$Utils.showToast('请输入提现金额', 'none')
+					self.$Utils.showToast('请补全提现信息', 'none')
 				};
 			},
 			
@@ -96,7 +127,12 @@
 					type:2,
 					account:1,
 					withdraw:1,
-					withdraw_status:0
+					withdraw_status:0,
+					name:self.submitData.name,
+					phone:self.submitData.phone,
+					//wechat:self.submitData.wechat,
+					card_no:self.submitData.card_no,
+					bank:self.submitData.bank,
 				};
 				const callback = (data) => {				
 					if (data.solely_code == 100000) {					

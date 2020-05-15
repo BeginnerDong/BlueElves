@@ -279,6 +279,7 @@
 						}
 						
 					};
+					self.totalPrice = parseFloat(self.totalPrice).toFixed(2)
 				};
 				console.log(self.totalPrice)
 			},

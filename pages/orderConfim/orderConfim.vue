@@ -58,7 +58,7 @@
 		
 		<view class="xqbotomBar">
 			<view class="flex mgl15 fs13">总计：<view class="price fs14 ftw">{{totalPrice}}</view></view>
-			<button class="payBtn" open-type="getUserInfo"  @getuserinfo="Utils.stopMultiClick(submit)">立即支付</button>
+			<button class="payBtn" open-type="getUserInfo"  @getuserinfo="Utils.stopMultiClick(submit)">{{userInfoData.behavior==1?'下单预订':'立即支付'}}</button>
 		</view>
 		
 		<!-- 订单预约成功弹框 -->
@@ -93,7 +93,8 @@
 				pay:{},
 				totalPrice:0,
 				mainData:[],
-				addressData:{}
+				addressData:{},
+				userInfoData:{}
 			}
 		},
 		
@@ -158,9 +159,7 @@
 				const callback = (res) => {
 					if (res.solely_code == 100000 && res.info.data[0]) {
 						self.distriData = res.info.data[0];
-					} else {
-						self.$Utils.showToast(res.msg, 'none')
-					};
+					}
 					self.$Utils.finishFunc('getDistriData');
 				};
 				self.$apis.distriGet(postData, callback);
@@ -209,9 +208,19 @@
 					return
 				}
 				var orderList = []
+				var data = {};
+				if(self.userInfoData.behavior==1){
+					data.is_self = 1;
+					data.user_no = self.distriData.parent_no;
+					data.relation_user = uni.getStorageSync('user_info').user_no;
+				}else if(self.userInfoData.behavior==2){
+					data.is_self = 0;
+				};
+				data.member_price = self.member_price;
+				data.snap_address = self.addressData;
 				for (var i = 0; i < self.mainData.length; i++) {
-					orderList.push({product_id:self.mainData[i].product_id,count:self.mainData[i].count,type:self.mainData[i].type})
-				}
+					orderList.push({product_id:self.mainData[i].product_id,count:self.mainData[i].count,type:self.mainData[i].type,data:data})
+				};
 				const callback = (user, res) => {
 					self.addOrder(orderList)
 				};
@@ -223,19 +232,21 @@
 				const postData = {}; 
 				postData.orderList = self.$Utils.cloneForm(orderList);
 				postData.data = {};
+				postData.data.level = 1;
 				postData.snap_address = self.addressData;
 				console.log('addOrder',self.userInfoData);
 				
 				if(self.userInfoData.behavior==1){
-					postData.type==2;
+					postData.type=2;
 					postData.data.is_self = 1;
-					postData.data.user_no = self.distriData.perent_no;
+					postData.data.user_no = self.distriData.parent_no;
 					postData.data.relation_user = uni.getStorageSync('user_info').user_no;
 				}else if(self.userInfoData.behavior==2){
-					postData.type==1;
+					postData.type=1;
 					postData.data.is_self = 0;
 				};
 				postData.data.member_price = self.member_price;
+				postData.data.snap_address = self.addressData;
 				postData.parent = 1;
 				postData.tokenFuncName = 'getProjectToken';
 				console.log('addOrder',postData);

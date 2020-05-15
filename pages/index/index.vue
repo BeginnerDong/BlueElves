@@ -19,7 +19,7 @@
 				<view class="tit">{{item.title}}</view>
 			</view>
 		</view>
-		
+		<button @click="Router.redirectTo({route:{path:'/pages/payEnter/payEnter'}})">购买会员</button>
 		<view class="mglr4 pdt15">
 			<view class="Big-title fs15 ftw">推荐商品</view>
 		</view>
@@ -34,10 +34,11 @@
 					</view>
 					<view class="B-price">
 						<view class="flex">
-							<view class="price">{{item.o_price}}</view>
 							<view class="priceTit">销售价</view>
-							<view class="price2" v-if="userInfoData.behavior>0">￥{{userInfoData.behavior==1?item.member_price:item.price}}</view>
+							<view class="price">{{item.o_price}}</view>
 							<view class="priceTit" v-if="userInfoData.behavior>0">成本价</view>
+							<view class="price2" v-if="userInfoData.behavior>0">￥{{userInfoData.behavior==1?item.member_price:item.price}}</view>
+							
 						</view>
 					</view>
 					<view class="addCar" @click="addCar(index)"><image src="../../static/images/home-icon9.png" mode=""></image></view>

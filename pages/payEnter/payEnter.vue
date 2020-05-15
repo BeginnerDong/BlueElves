@@ -12,9 +12,14 @@
 				<view class="ll">手机号</view>
 				<view class="rr"><input type="text" v-model="submitData.phone" placeholder="填写手机号" maxlength="11" placeholder-class="placeholder"/></view>
 			</view>
-			<view class="item flexRowBetween">
+			<!-- <view class="item flexRowBetween">
 				<view class="ll">邀请码</view>
 				<view class="rr">{{submitData.relation_user}}</view>
+			</view> -->
+			
+			<view class="item flexRowBetween">
+				<view class="ll">邀请码</view>
+				<view class="rr"><input type="text" v-model="submitData.relation_user" placeholder="填写邀请码"  placeholder-class="placeholder"/></view>
 			</view>
 		</view>
 		
@@ -152,9 +157,11 @@
 				const postData = {};	
 				postData.tokenFuncName = 'getProjectToken',
 				postData.data = {
+					level:10,
 					price:0.01,
 					relation_user:self.submitData.relation_user,
 				};
+				postData.refreshToken = true;
 				const callback = (res) => {
 					if (res.solely_code == 100000) {
 						self.orderId = res.info.id;

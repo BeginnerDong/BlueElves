@@ -7,7 +7,7 @@
 .productList .item .tit{margin-bottom: 10rpx;font-size: 30rpx;}
 /* .productList .item .lable{line-height: 40rpx;padding: 0 8rpx;border: 1px solid #c0bebe;font-size: 24rpx;color: #999;border-radius: 8rpx;} */
 .productList .item .B-price{position: absolute;left: 20rpx;right: 10rpx;bottom:20rpx;}
-.productList .item .addCar{width: 50rpx;height: 50rpx;position: absolute;right: 10rpx;bottom: 40rpx; z-index:1;}
+.productList .item .addCar{width: 50rpx;height: 50rpx;position: absolute;right: 10rpx;bottom: 70rpx; z-index:1;}
 .productList .item .B-price .price{font-size: 30rpx; font-weight: bold;}
-.productList .item .B-price .price2{font-size: 24rpx; font-weight: bold; color: #666;margin-left: 20rpx;}
+.productList .item .B-price .price2{font-size: 24rpx; font-weight: bold; color: #666;}
 .productList .item .B-price .priceTit{font-size: 22rpx; color: #999;margin-left: 10rpx;}

@@ -19,10 +19,11 @@
 					</view>
 					<view class="B-price">
 						<view class="flex">
-							<view class="price">{{item.o_price}}</view>
 							<view class="priceTit">销售价</view>
-							<view class="price2" v-if="item.behavior>0">￥{{item.behavior==1?item.member_price:item.price}}</view>
+							<view class="price">{{item.o_price}}</view>
 							<view class="priceTit" v-if="item.behavior>0">成本价</view>
+							<view class="price2" v-if="item.behavior>0">￥{{item.behavior==1?item.member_price:item.price}}</view>
+							
 						</view>
 					</view>
 					<view class="addCar" @click="addCar(index)"><image src="../../static/images/home-icon9.png" mode=""></image></view>

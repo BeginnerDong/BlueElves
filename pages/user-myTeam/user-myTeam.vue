@@ -6,14 +6,24 @@
 				<view class="tt" :class="curr==1?'on':''" @click="currChange('1')">我的成员</view>
 				<view class="tt" :class="curr==2?'on':''" @click="currChange('2')">我的推荐</view>
 				<view class="tt" :class="curr==3?'on':''" @click="currChange('3')">推荐我的</view>
-				<view class="tt" :class="curr==4?'on':''" @click="currChange('4')">我的服务商</view>
+				<view class="tt" :class="curr==4?'on':''" @click="currChange('4')">我的供货商</view>
 			</view>
 		</view>
 		<view class="topNavH"></view>
 		
 		
 		<view class="myRowBetween">
-			<view class="item flexRowBetween" v-for="(item,index) in mainData" :key="index">
+			<view class="item flexRowBetween" v-if="curr==4&&userInfoData.behavior==2">
+				<view class="ll flex">
+					<view class="photo"><image src="../../static/images/logo.jpg" mode=""></image></view>
+					<view class="infor">
+						<view class="fs13">蓝色精灵</view>
+						<view class="fs13 mgt5">{{Utils.timeto(userInfoData.up_time*1000,'ymd')}}</view>
+					</view>
+				</view>
+				<view class="rr">类型：平台</view>
+			</view>
+			<view class="item flexRowBetween" v-else v-for="(item,index) in mainData" :key="index">
 				<view class="ll flex">
 					<view class="photo"><image :src="item.relationUser&&item.relationUser[0]?item.relationUser[0].headImgUrl:''" mode=""></image></view>
 					<view class="infor">
@@ -26,7 +36,7 @@
 		</view>
 		
 		<!-- 无数据 -->
-		<view class="nodata" style="width: 417rpx;height: 396rpx;margin-top: 200rpx;"><image src="../../static/images/teaml-icon.png" mode=""></image></view>
+		<view class="nodata" style="width: 417rpx;height: 396rpx;margin-top: 200rpx;" v-if="mainData.length==0"><image src="../../static/images/teaml-icon.png" mode=""></image></view>
 		
 	</view>
 </template>
@@ -36,6 +46,7 @@
 		data() {
 			return {
 				Router:this.$Router,
+				Utils:this.$Utils,
 				showView: false,
 				score:'',
 				wx_info:{},
@@ -45,7 +56,9 @@
 				teamData:[{},{},{}],
 				searchItem:{
 					type:2
-				}
+				},
+				mainData:[],
+				userInfoData:{}
 			}
 		},
 		
@@ -53,7 +66,7 @@
 			const self = this;
 			self.paginate = self.$Utils.cloneForm(self.$AssetsConfig.paginate);
 			self.searchItem.parent_no = uni.getStorageSync('user_info').user_no;
-			self.$Utils.loadAll(['getMainData'], self);
+			self.$Utils.loadAll(['getMainData','getUserInfoData'], self);
 		},
 		
 		onReachBottom() {
@@ -66,6 +79,19 @@
 		},
 		
 		methods: {
+			
+			getUserInfoData() {
+				const self = this;
+				const postData = {};
+				postData.tokenFuncName = 'getProjectToken';
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.userInfoData = res.info.data[0]
+					}
+					self.$Utils.finishFunc('getUserInfoData');
+				};
+				self.$apis.userGet(postData, callback);
+			},
 			
 			currChange(curr){
 				const self = this;
@@ -92,7 +118,7 @@
 							child_no:uni.getStorageSync('user_info').user_no
 						}
 					}
-					self.getMainData()
+					self.getMainData(true)
 				}
 			},
 			

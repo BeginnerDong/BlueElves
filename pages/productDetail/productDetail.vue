@@ -15,7 +15,7 @@
 			<view class="flex pdt20">
 				<view class="price">{{mainData.o_price}}</view>
 				<view class="priceTit">销售价</view>
-				<view class="price2" v-if="userInfoData.behavior>0">￥{{userInfoData.behavior==1?item.member_price:item.price}}</view>
+				<view class="price2" v-if="userInfoData.behavior>0">￥{{userInfoData.behavior==1?mainData.member_price:mainData.price}}</view>
 				<view class="priceTit" v-if="userInfoData.behavior>0">成本价</view>
 			</view>
 		</view>

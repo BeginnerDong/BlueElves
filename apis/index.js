@@ -30,6 +30,21 @@ export default {
 		};
 		http.HTTP(allParams);
 	},
+	
+	getAchievement(param, callback) {
+	
+		var allParams = {
+			url: 'Project/Solely/getAchievement',
+			type: 'post',
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	
 
 
 	bindShop(param, callback) {
@@ -176,10 +191,22 @@ export default {
 		};
 		http.HTTP(allParams);
 	},
-
+	
 	userGet(param, callback) {
 		var allParams = {
 			url: 'Base/User/get',
+			type: 'post',
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+
+	commonUserGet(param, callback) {
+		var allParams = {
+			url: 'Common/User/get',
 			type: 'post',
 			data: param,
 			sCallback: function(data) {

@@ -91,14 +91,14 @@
 		{
 			"path": "pages/user-myIntegral/user-myIntegral",
 			"style": {
-				"navigationBarTitleText": "我的积分",
+				"navigationBarTitleText": "我的余额",
 				"onReachBottomDistance":100
 			}
 		},
 		{
 			"path": "pages/user-myIntegralDetail/user-myIntegralDetail",
 			"style": {
-				"navigationBarTitleText": "积分流水",
+				"navigationBarTitleText": "余额流水",
 				"onReachBottomDistance":100
 			}
 		},
@@ -120,7 +120,8 @@
 			"path": "pages/user-data/user-data",
 			"style": {
 				"navigationBarTitleText": "数据统计",
-				"onReachBottomDistance":100
+				"onReachBottomDistance":100,
+				"enablePullDownRefresh":true
 			}
 		},
 		{
@@ -161,8 +162,9 @@
 		{
 			"path": "pages/userVIP-data/userVIP-data",
 			"style": {
-				"navigationBarTitleText": "我的考核",
-				"onReachBottomDistance":100
+				"navigationBarTitleText": "数据统计",
+				"onReachBottomDistance":100,
+				"enablePullDownRefresh":true
 			}
 		},
 		{

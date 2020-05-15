@@ -18,7 +18,7 @@
 		<view class="nodata" v-if="mainData.length==0"><image src="../../static/images/nodata.png" mode=""></image></view>
 		
 		<view class="submitbtn pdtb15">
-			<view class="btn" :style="mainData.length<5?'background:#999':''" @click="submit">考核申请</view>
+			<view class="btn" :style="!can?'background:#999':''" @click="submit">考核申请</view>
 		</view>
 		
 		
@@ -37,7 +37,8 @@
 				},
 				asessData:[{},{},{}],
 				is_asessShow:false,
-				mainData:[]
+				mainData:[],
+				can:false
 			}
 		},
 		
@@ -72,6 +73,9 @@
 					postData.tokenFuncName = 'getProjectToken';
 					postData.searchItem = {
 						user_no:uni.getStorageSync('user_info').user_no
+					};
+					postData.data = {
+						check_status:1
 					};
 					const callback = (res) => {
 						if (res.solely_code == 100000) {
@@ -127,7 +131,10 @@
 				const callback = (res) => {
 					if (res.info.data.length > 0) {
 						self.mainData.push.apply(self.mainData, res.info.data);
-					}
+						if(self.mainData.length>=5){
+							self.can = true
+						}
+					};
 					self.$Utils.finishFunc('getMainData');
 			
 				};

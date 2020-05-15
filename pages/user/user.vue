@@ -37,25 +37,25 @@
 					<view class="more flexEnd fs12 color9" @click="Router.navigateTo({route:{path:'/pages/userOrder/userOrder'}})">全部订单<image class="arrowR" src="../../static/images/about-icon-1.png" mode=""></image></view>
 				</view>
 				<view class="menu flexRowBetween fs12 pdt20 center">
-					<view class="item" @click="Router.navigateTo({route:{path:'/pages/userOrder/userOrder'}})">
+					<view class="item" @click="Router.navigateTo({route:{path:'/pages/userOrder/userOrder?num=2'}})">
 						<view class="icon">
 							<image src="../../static/images/about-icon2.png"></image>
 						</view>
 						<view>待处理</view>
 					</view>
-					<view class="item" @click="Router.navigateTo({route:{path:'/pages/userOrder/userOrder'}})">
+					<view class="item" @click="Router.navigateTo({route:{path:'/pages/userOrder/userOrder?num=3'}})">
 						<view class="icon">
 							<image src="../../static/images/about-icon3.png"></image>
 						</view>
 						<view>待发货</view>
 					</view>
-					<view class="item" @click="Router.navigateTo({route:{path:'/pages/userOrder/userOrder'}})">
+					<view class="item" @click="Router.navigateTo({route:{path:'/pages/userOrder/userOrder?num=4'}})">
 						<view class="icon">
 							<image src="../../static/images/about-icon4.png"></image>
 						</view>
 						<view>已发货</view>
 					</view>
-					<view class="item" @click="Router.navigateTo({route:{path:'/pages/userOrder/userOrder'}})">
+					<view class="item" @click="Router.navigateTo({route:{path:'/pages/userOrder/userOrder?num=5'}})">
 						<view class="icon">
 							<image src="../../static/images/about-icon5.png"></image>
 						</view>
@@ -76,7 +76,7 @@
 						<view class="icon">
 							<image src="../../static/images/about-icon6.png"></image>
 						</view>
-						<view>我的积分</view>
+						<view>我的余额</view>
 					</view>
 					<view class="item" @click="Router.navigateTo({route:{path:'/pages/user-myTeam/user-myTeam'}})">
 						<view class="icon">
@@ -123,23 +123,23 @@
 			<view class="navbar_item" @click="Router.redirectTo({route:{path:'/pages/car/car'}})" >
 				<view class="nav_img pr">
 					<image src="../../static/images/nabar2.png" />
-					<view class="carNum">3</view>
+					<view class="carNum" v-if="cartData.length>0">{{cartCount}}</view>
 				</view>
 				<view class="text">购物车</view>
 			</view>
 			<view class="navbar_item" v-if="userInfoData&&userInfoData.behavior<=1"
-			 @click="Router.redirectTo({route:{path:'/pages/user/user'}})" >
+			 @click="Router.rediressctTo({route:{path:'/pages/user/user'}})" >
 				<view class="nav_img">
 					<image src="../../static/images/nabar3-a.png" />
 				</view>
-				<view class="text">我的</view>
+				<view class="text this-text">我的</view>
 			</view>
 			<view class="navbar_item" v-if="userInfoData&&userInfoData.behavior==2" 
 			@click="Router.redirectTo({route:{path:'/pages/userVIP/userVIP'}})" >
 				<view class="nav_img">
-					<image src="../../static/images/nabar3.png" />
+					<image src="../../static/images/nabar3-a.png" />
 				</view>
-				<view class="text">服务商</view>
+				<view class="text this-text">服务商</view>
 			</view>
 		</view>
 		<!--底部tab键 end-->
@@ -152,12 +152,17 @@
 		data() {
 			return {
 				Router:this.$Router,
-				userInfoData:{}
+				userInfoData:{},
+				cartCount:0
 			}
 		},
 		
 		onLoad() {
 			const self = this;
+			self.cartData = self.$Utils.getStorageArray('cartData');
+			for (var i = 0; i < self.cartData.length; i++) {
+				self.cartCount += parseInt( self.cartData[i].count)
+			};
 			self.$Utils.loadAll(['getUserInfoData'], self);
 		},
 		
