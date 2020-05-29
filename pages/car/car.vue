@@ -128,6 +128,7 @@
 			const self = this;
 			self.cartCount = 0;
 			self.mainData = self.$Utils.getStorageArray('cartData');
+			console.log('self.mainData',self.mainData)
 			for (var i = 0; i < self.mainData.length; i++) {
 				self.cartCount += parseInt( self.mainData[i].count)
 			};
@@ -279,8 +280,8 @@
 						}
 						
 					};
-					self.totalPrice = parseFloat(self.totalPrice).toFixed(2)
 				};
+				self.totalPrice = parseFloat(self.totalPrice).toFixed(2)
 				console.log(self.totalPrice)
 			},
 			

@@ -19,7 +19,7 @@
 				<view class="tit">{{item.title}}</view>
 			</view>
 		</view>
-		<button @click="Router.redirectTo({route:{path:'/pages/payEnter/payEnter'}})">购买会员</button>
+		<!-- <button @click="Router.redirectTo({route:{path:'/pages/payEnter/payEnter'}})">购买会员</button> -->
 		<view class="mglr4 pdt15">
 			<view class="Big-title fs15 ftw">推荐商品</view>
 		</view>
@@ -63,13 +63,12 @@
 				</view>
 				<view class="text">购物车</view>
 			</view>
-			<view class="navbar_item" v-if="userInfoData&&userInfoData.behavior<=1" 
-			@click="check('/pages/user/user')">
+			<button open-type="getUserInfo"  @getuserinfo="check('/pages/user/user')" class="navbar_item" v-if="userInfoData&&userInfoData.behavior<=1">
 				<view class="nav_img">
 					<image src="../../static/images/nabar3.png" />
 				</view>
 				<view class="text">我的</view>
-			</view>
+			</button>
 			<view class="navbar_item" v-if="userInfoData&&userInfoData.behavior==2" @click="Router.redirectTo({route:{path:'/pages/userVIP/userVIP'}})" >
 				<view class="nav_img">
 					<image src="../../static/images/nabar3.png" />
@@ -119,15 +118,19 @@
 			
 			check(path){
 				const self = this;
-				if(self.userInfoData.behavior>0){
-					self.Router.redirectTo({route:{path:path}})
-				}else{
-					uni.showModal({
-						title:'提示',
-						content:'成为会员，享受更多服务。',
-						showCancel:false
-					})
-				}
+				const callback = (user, res) => {
+					if(self.userInfoData.behavior>0){
+						self.Router.redirectTo({route:{path:path}})
+					}else{
+						uni.showModal({
+							title:'提示',
+							content:'成为会员，享受更多服务。',
+							showCancel:false
+						})
+					}
+				};
+				self.$Utils.getAuthSetting(callback);
+				
 			},
 			
 			addCar(index){

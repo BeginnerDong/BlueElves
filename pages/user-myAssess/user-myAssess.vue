@@ -65,7 +65,7 @@
 				if(self.mainData.length<5){
 					uni.showModal({
 						title:'提示',
-						content:'您发展的会员未达到数量，不满足晋升服务的资格。',
+						content:'您推荐的会员未达到数量，不满足晋升服务的资格。',
 						showCancel:false
 					})
 				}else{
@@ -81,7 +81,7 @@
 						if (res.solely_code == 100000) {
 							uni.showModal({
 								title:'提示',
-								content:'您考核申请申请成功，请等待后台审核。',
+								content:'您的考核申请申请成功，请等待后台审核。',
 								showCancel:false,
 								success(res) {
 									if(res.confirm){

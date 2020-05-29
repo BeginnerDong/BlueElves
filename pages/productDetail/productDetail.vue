@@ -13,11 +13,13 @@
 		<view class="mglr4 pdtb15 detailTit">
 			<view class="fs15 ftw">{{mainData.title}}</view>
 			<view class="flex pdt20">
-				<view class="price">{{mainData.o_price}}</view>
 				<view class="priceTit">销售价</view>
-				<view class="price2" v-if="userInfoData.behavior>0">￥{{userInfoData.behavior==1?mainData.member_price:mainData.price}}</view>
+				<view class="price">{{mainData.o_price}}</view>
 				<view class="priceTit" v-if="userInfoData.behavior>0">成本价</view>
+				<view class="price2" v-if="userInfoData.behavior>0">￥{{userInfoData.behavior==1?mainData.member_price:mainData.price}}</view>
+				<view class="price2">库存：{{mainData.stock?mainData.stock:0}}</view>
 			</view>
+			
 		</view>
 		<view class="f5H10"></view>
 		<view class="pdt15" >

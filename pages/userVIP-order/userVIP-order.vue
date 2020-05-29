@@ -19,6 +19,9 @@
 			<view class="mglr4">
 				<view class="proRow">
 					<view class="item" v-for="(item,index) in mainData" :key="index">
+						<view class="flexRowBetween mgb10" v-if="item.user&&item.user[0]">
+							<view style="font-weight:700">提交人：{{item.user&&item.user[0]?item.user[0].nickname:''}}</view>
+						</view>
 						<view class="fs12 flexRowBetween mgb10">
 							<view class="color9">交易时间：{{item.create_time}}</view>
 							<view class="red" v-if="item.pay_status==1&&item.transport_status==1&&item.order_step==0">已发货</view>
@@ -49,16 +52,14 @@
 							<view class="ftw">快递单号</view>
 							<view class="text pdl10 color6">{{item.express_info}}</view>
 						</view>
-						<view class="mgt15 flexEnd underBtn" @click="orderUpdate(index)" v-if="item.transport_status==1">
-							
-							<view class="Bbtn">确认收货</view>
+						<view class="mgt15 flexEnd underBtn">
+							<view class="Bbtn" @click="orderUpdate(index)" v-if="item.transport_status==1">确认收货</view>
+							<view class="Bbtn blue"  v-if="item.pay_status==0" @click="orderUpdate(index,'delete')">删除订单</view>
+							<view class="Bbtn blue"  v-if="item.pay_status==0" @click="goPay(index)" >去支付</view>
+							<view class="Bbtn" v-if="item.pay_status==1&&item.order_step==0" 
+							:data-id="item.id" @click="Router.navigateTo({route:{path:'/pages/userVIP-returnGoods/userVIP-returnGoods?id='+$event.currentTarget.dataset.id}})">申请售后</view>
 						</view>
-						<view class="mgt15 flexEnd underBtn" @click="goPay(index)" v-if="item.pay_status==0">
-							<view class="Bbtn blue">去支付</view>
-						</view>
-						<view class="mgt15 flexEnd underBtn" v-if="item.pay_status==1&&item.transport_status==0&&item.order_step==0">
-							<view class="Bbtn" :data-id="item.id" @click="Router.navigateTo({route:{path:'/pages/userVIP-returnGoods/userVIP-returnGoods?id='+$event.currentTarget.dataset.id}})">申请退货</view>
-						</view>
+						
 						
 						<view class="adviseF5 flexRowBetween f5bj fs13 mgt15" v-if="item.order_step>0">
 							<view class="ftw">退货原因</view>
@@ -109,13 +110,18 @@
 		
 		methods: {
 			
-			orderUpdate(index) {
+			orderUpdate(index,type) {
 				const self = this;
 				uni.setStorageSync('canClick', false);
 				const postData = {};
 				postData.tokenFuncName = 'getProjectToken';
 				postData.data = {
 					transport_status:2,
+				};
+				if(type&&type=='delete'){
+					postData.data = {
+						status:-1,
+					};
 				};
 				postData.searchItem = {
 					id:self.mainData[index].id,
@@ -241,6 +247,17 @@
 				postData.paginate = self.$Utils.cloneForm(self.paginate);
 				postData.searchItem = self.$Utils.cloneForm(self.searchItem);
 				postData.searchItem.user_no = uni.getStorageSync('user_info').user_no;
+				postData.getAfter = {
+					user:{
+						tableName:'User',
+						middleKey:'relation_user',
+						key:'user_no',
+						searchItem:{
+							status:1
+						},
+						condition:'='
+					}
+				};
 				const callback = (res) => {
 					if (res.info.data.length > 0) {
 						self.mainData.push.apply(self.mainData, res.info.data);

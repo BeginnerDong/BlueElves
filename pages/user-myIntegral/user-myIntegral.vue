@@ -45,7 +45,7 @@
 			</view>
 			<view class="item flex mgb10">
 				<view class="input">
-					<input type="text" v-model="submitData.bank" placeholder="请输入开户行" placeholder-class="placeholder">
+					<input type="text" v-model="submitData.bank" placeholder="请输入开户行(xx银行xx省xx市xx支行)" placeholder-class="placeholder">
 				</view>
 			</view>
 			<view class="item submitbtn mgt15" style="padding: 0;" @click="submit">

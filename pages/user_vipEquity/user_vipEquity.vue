@@ -60,7 +60,7 @@
 				postData.tokenFuncName = 'getProjectToken'
 				postData.qrInfo = {
 					scene: uni.getStorageSync('user_info').user_no,
-					path: 'pages/payEnter/payEnter',
+					page: 'pages/payEnter/payEnter',
 				};
 				postData.output = 'url';
 				postData.ext = 'png';

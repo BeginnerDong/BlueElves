@@ -49,9 +49,9 @@
 							<view class="ftw">快递单号</view>
 							<view class="text pdl10 color6">{{item.express_info}}</view>
 						</view>
-						<!-- <view class="mgt15 flexEnd underBtn" @click="" v-if="item.transport_status==1">
-							<view class="Bbtn">确认收货</view>
-						</view> -->
+						<view class="mgt15 flexEnd underBtn" @click="orderUpdate(index)" v-if="item.pay_status==0">
+							<view class="Bbtn">删除订单</view>
+						</view>
 					</view>
 
 				</view>
@@ -104,6 +104,32 @@
 		},
 
 		methods: {
+			
+			orderUpdate(index) {
+				const self = this;
+				uni.setStorageSync('canClick', false);
+				const postData = {};
+				postData.tokenFuncName = 'getProjectToken';
+				postData.data = {
+					status:-1,
+				};
+				postData.searchItem = {
+					id:self.mainData[index].id,
+					user_type:0
+				};
+				const callback = (data) => {
+					uni.setStorageSync('canClick', true);
+					if (data && data.solely_code == 100000) {
+						self.$Utils.showToast('操作成功','none');
+						setTimeout(function() {
+							self.getMainData(true)
+						}, 1000);
+					} else {
+						self.$Utils.showToast(data.msg,'none')
+					}
+				};
+				self.$apis.orderUpdate(postData, callback);
+			 },
 			
 			currChange(curr) {
 				const self = this;

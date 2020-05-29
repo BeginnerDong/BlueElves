@@ -64,7 +64,8 @@
 				tableData:3,
 				labelData:[],
 				searchItem:{
-					thirdapp_id:2
+					thirdapp_id:2,
+					pay_status:1
 				},
 				userData:{},
 				end:'',

@@ -10,11 +10,11 @@
 		<view class="orderNavH"></view>
 		<view class="mglr4 productList mgt10">
 			<view class="item radius10 pr flex" v-for="(item,index) in mainData" :key="index" >
-				<view class="pic" @click="Router.navigateTo({route:{path:'/pages/productDetail/productDetail'}})">
+				<view class="pic"  :data-id="item.id" @click="Router.navigateTo({route:{path:'/pages/productDetail/productDetail?id='+$event.currentTarget.dataset.id}})">
 					<image :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:''" mode=""></image>
 				</view>
 				<view class="infor">
-					<view class="tit avoidOverflow2" @click="Router.navigateTo({route:{path:'/pages/productDetail/productDetail'}})">
+					<view class="tit avoidOverflow2"  :data-id="item.id" @click="Router.navigateTo({route:{path:'/pages/productDetail/productDetail?id='+$event.currentTarget.dataset.id}})">
 						{{item.title}}
 					</view>
 					<view class="B-price">

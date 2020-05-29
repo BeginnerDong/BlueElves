@@ -12,18 +12,18 @@
 				<view class="ll">手机号</view>
 				<view class="rr"><input type="text" v-model="submitData.phone" placeholder="填写手机号" maxlength="11" placeholder-class="placeholder"/></view>
 			</view>
-			<!-- <view class="item flexRowBetween">
-				<view class="ll">邀请码</view>
-				<view class="rr">{{submitData.relation_user}}</view>
-			</view> -->
-			
 			<view class="item flexRowBetween">
 				<view class="ll">邀请码</view>
-				<view class="rr"><input type="text" v-model="submitData.relation_user" placeholder="填写邀请码"  placeholder-class="placeholder"/></view>
+				<view class="rr">{{submitData.relation_user}}</view>
 			</view>
+			
+			<!-- <view class="item flexRowBetween">
+				<view class="ll">邀请码</view>
+				<view class="rr"><input type="text" v-model="submitData.relation_user" placeholder="填写邀请码"  placeholder-class="placeholder"/></view>
+			</view> -->
 		</view>
 		
-		<view class="mglr4 money center">需要支付366元</view>
+		<view class="mglr4 money center">需要支付336元</view>
 		<view class="submitbtn">
 			<button class="btn" type="default" open-type="getUserInfo"  @getuserinfo="Utils.stopMultiClick(submit)">提交</button>
 		</view>
@@ -92,7 +92,7 @@
 				self.price =  parseFloat(self.price)
 				const postData = {};	
 				postData.wxPay = {
-					price:0.01
+					price:336
 				};
 				postData.tokenFuncName = 'getProjectToken',
 				postData.searchItem = {
@@ -158,7 +158,7 @@
 				postData.tokenFuncName = 'getProjectToken',
 				postData.data = {
 					level:10,
-					price:0.01,
+					price:336,
 					relation_user:self.submitData.relation_user,
 				};
 				postData.refreshToken = true;

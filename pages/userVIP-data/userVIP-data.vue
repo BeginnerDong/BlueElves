@@ -80,10 +80,12 @@
 				subordinate: ['全部', '上岛咖啡', '星巴克','话费说'],
 				searchItem:{
 					thirdapp_id:2,
-					user_type:0
+					user_type:0,
+					behavior:1
 				},
 				searchItemTwo:{
-					thirdapp_id:2
+					thirdapp_id:2,
+					pay_status:1
 				},
 				mainData:[],
 				childData:[],
@@ -127,7 +129,8 @@
 				const postData = {};
 				postData.tokenFuncName = 'getProjectToken';
 				postData.searchItem = {
-					thirdapp_id:2
+					thirdapp_id:2,
+					behavior:1
 				};
 				postData.getBefore = {
 					relationUser:{
@@ -136,7 +139,8 @@
 						key:'child_no',
 						searchItem:{
 							parent_no:['in',[uni.getStorageSync('user_info').user_no]],
-							status:['in',[1]]
+							status:['in',[1]],
+							type:['in',[2]]
 						},
 						condition:'in'
 					},
@@ -246,7 +250,8 @@
 							key:'child_no',
 							searchItem:{
 								parent_no:['in',[uni.getStorageSync('user_info').user_no]],
-								status:['in',[1]]
+								status:['in',[1]],
+								type:['in',[2]]
 							},
 							condition:'in'
 						},
@@ -261,7 +266,7 @@
 						condition: 'in',
 						compute:{
 						  count:[
-						    'sum',
+						    'count',
 						    'count',
 						    self.$Utils.cloneForm(self.searchItemTwo)
 						  ],
