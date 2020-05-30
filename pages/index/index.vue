@@ -125,8 +125,14 @@
 						uni.showModal({
 							title:'提示',
 							content:'成为会员，享受更多服务。',
-							showCancel:false
+							showCancel:false,
+							success() {
+								if(res.confirm){
+									self.getUserInfoData()
+								}
+							}
 						})
+						
 					}
 				};
 				self.$Utils.getAuthSetting(callback);
@@ -169,6 +175,9 @@
 				const self = this;
 				const postData = {};
 				postData.tokenFuncName = 'getProjectToken';
+				if(!wx.getStorageSync('user_info')||wx.getStorageSync('user_info').headImgUrl==''||!wx.getStorageSync('user_info').headImgUrl){
+				  postData.refreshToken = true;
+				};
 				const callback = (res) => {
 					if (res.info.data.length > 0) {
 						self.userInfoData = res.info.data[0]
@@ -261,5 +270,19 @@
 	.Big-title{position: relative;padding-left: 20rpx;z-index: 1;}
 	.Big-title::before{content: '';width: 8rpx;height: 16rpx;background-color:#38a0f9;position: absolute;top: 8rpx;left: 0; z-index: -1;}
 	
-	
+	button{
+		background: none;
+		line-height: 1.5;
+		margin-left: 0;
+		margin-right: 0;
+		font-size: 14px;
+		border-radius: 0;
+	}
+	button::after{
+		border: none;
+	}
+	.button-hover {
+		color: #000000;
+		background: none;
+	}
 </style>

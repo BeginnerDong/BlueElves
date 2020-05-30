@@ -172,7 +172,9 @@
 				const self = this;
 				const postData = {};
 				postData.tokenFuncName = 'getProjectToken';
-				postData.refreshToken = true;
+				if(!wx.getStorageSync('user_info')||wx.getStorageSync('user_info').headImgUrl==''||!wx.getStorageSync('user_info').headImgUrl){
+				  postData.refreshToken = true;
+				};
 				const callback = (res) => {
 					if (res.info.data.length > 0) {
 						self.userInfoData = res.info.data[0]
